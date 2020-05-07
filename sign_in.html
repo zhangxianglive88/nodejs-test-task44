@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注册</title>
+    <title>登录</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
     <div class="form-wrapper">
-        <h1>注册</h1>
+        <h1>登录</h1>
         <form id="signUpForm">
             <div class="row">
                 <label>邮箱</label>
@@ -23,23 +23,17 @@
                 <span class="error"></span>
             </div>
             <div class="row">
-                <label>确认密码</label>
-                <input type="password" name="password_confirmation">
-                <span class="error"></span>
-            </div>
-            <div class="row">
-                <input type="submit" value="注册">
+                <input type="submit" value="登录">
             </div>
         </form>
     </div>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>
     <script>
         let $form = $('#signUpForm')
-        // 获取用户填写的email、password和password-confirmation
         $form.on('submit', (e) => {
             e.preventDefault()
             let hash = {}
-            let need = ['email', 'password', 'password_confirmation']
+            let need = ['email', 'password']
             need.forEach((name) => {
                 let value = $form.find(`[name=${name}]`).val()
                 hash[name] = value
@@ -56,28 +50,19 @@
                 $form.find('[name="password"]').siblings('.error').text('兄弟，填密码呀')
                 return
             }
-            if(hash['password_confirmation'] === ''){
-                $form.find('[name="password_confirmation"]').siblings('.error').text('兄弟，确认密码呀')
-                return
-            }
-            if(hash['password_confirmation'] !== hash['password']){
-                $form.find('[name="password_confirmation"]').siblings('.error').text('兄弟，密码不匹配')
-                return
-            }
 
             // 向服务器发送Ajax请求
-            $.post('/sign_up', hash) // 返回的是promise
+            $.post('/sign_in', hash) // 返回的是promise
                 .then((response) => {
-                    window.location.href = '/sign_in'
+                    window.location.href = '/'  // 跳转到首页
                 }, (request) => {
-                    let {errors} = request.responseJSON
-                    if(errors.email && errors.email === 'invalid'){
-                        $form.find('[name="email"]').siblings('.error')
-                        .text(`邮箱格式错误`) 
-                    }
+                    alert('邮箱与密码不匹配！')
                 })
         })
+
     </script>
+
+
 </body>
 
 </html>
