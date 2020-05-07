@@ -42,7 +42,8 @@ var server = http.createServer(function (request, response) {
           let parts = element.split('=')  // ['email', '1']
           let key = parts[0]
           let value = parts[1]
-          hash[key] = value        })
+          hash[key] = decodeURIComponent(value)        
+        })
         let {email, password, password_confirmation} = hash
         if(email.indexOf('@') === -1){
           response.statusCode = 400
@@ -60,6 +61,12 @@ var server = http.createServer(function (request, response) {
         }
         response.end()
       })  
+  }else if(path === '/style.css'){
+    let string = fs.readFileSync('./style.css', 'utf8')
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/css; charset=utf-8')
+    response.write(string)
+    response.end()
   } else if (path === '/main.js') {
     let string = fs.readFileSync('./main.js', 'utf8')
     response.statusCode = 200
